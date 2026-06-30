@@ -1,0 +1,16 @@
+{
+  "name": "controle-comercial",
+  "version": "2.0.0",
+  "description": "Sistema de controle comercial — produtos, caixa e usuários",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node database/seed.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^9.4.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

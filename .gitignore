@@ -1,0 +1,33 @@
+# Dependências
+node_modules/
+package-lock.json
+
+# Banco de dados SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# Variáveis de ambiente
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+.idea/
+
+# Build / dist
+dist/
+build/
+
+# Executáveis baixados
+*.exe
+*.lnk

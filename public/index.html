@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Sistema de Controle Comercial — produtos, fluxo de caixa e gestão de usuários." />
+  <title>Controle Comercial</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="tela-login-ativa">
+
+  <!-- ══════════════════════════════════════
+       TELA DE LOGIN
+  ══════════════════════════════════════ -->
+  <div id="tela-login" class="tela-login">
+    <div class="login-card">
+      <div class="login-logo">🏪</div>
+      <h1 class="login-titulo">Controle Comercial</h1>
+      <p class="login-sub">Faça login para continuar</p>
+
+      <form id="form-login" novalidate>
+        <div class="campo">
+          <label for="login-email">E-mail</label>
+          <input type="email" id="login-email" placeholder="admin@admin.com" required autocomplete="username" />
+        </div>
+        <div class="campo">
+          <label for="login-senha">Senha</label>
+          <input type="password" id="login-senha" placeholder="••••••••" required autocomplete="current-password" />
+        </div>
+        <div id="login-erro" class="alerta alerta--erro" style="display:none"></div>
+        <button type="submit" class="btn btn--primario btn--bloco" id="btn-login">Entrar</button>
+      </form>
+
+      <p class="login-dica">
+        Acesse via <strong>http://localhost:3000</strong><br>
+        Credenciais padrão: <code>admin@admin.com</code> / <code>admin123</code>
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       APP PRINCIPAL
+  ══════════════════════════════════════ -->
+  <div id="app" style="display:none">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar__header">
+        <span class="sidebar__logo">🏪</span>
+        <span class="sidebar__nome">Comercial</span>
+        <button id="btn-fechar-menu" class="sidebar__fechar" aria-label="Fechar menu">✕</button>
+      </div>
+
+      <nav class="sidebar__nav">
+        <a href="#" class="nav-item ativo" data-pagina="dashboard">
+          <span class="nav-item__icone">📊</span> Dashboard
+        </a>
+        <a href="#" class="nav-item" data-pagina="caixa">
+          <span class="nav-item__icone">💰</span> Fluxo de Caixa
+        </a>
+        <a href="#" class="nav-item" data-pagina="produtos">
+          <span class="nav-item__icone">📦</span> Produtos
+        </a>
+        <a href="#" class="nav-item nav-item--admin" data-pagina="usuarios">
+          <span class="nav-item__icone">👥</span> Usuários
+        </a>
+      </nav>
+
+      <div class="sidebar__footer">
+        <div class="usuario-info">
+          <span class="usuario-info__avatar">👤</span>
+          <div>
+            <div class="usuario-info__nome" id="sidebar-nome">—</div>
+            <div class="usuario-info__tipo" id="sidebar-tipo">—</div>
+          </div>
+        </div>
+        <button id="btn-logout" class="btn btn--ghost btn--bloco">Sair</button>
+      </div>
+    </aside>
+
+    <!-- Overlay mobile -->
+    <div id="overlay" class="overlay"></div>
+
+    <!-- Conteúdo principal -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <button id="btn-menu" class="topbar__menu" aria-label="Abrir menu">☰</button>
+        <h2 class="topbar__titulo" id="topbar-titulo">Dashboard</h2>
+      </header>
+
+      <main class="conteudo" id="conteudo">
+
+        <!-- ── DASHBOARD ── -->
+        <section id="pagina-dashboard" class="pagina ativa">
+          <div class="cards-resumo" id="cards-dashboard"></div>
+
+          <div class="grid-2">
+            <div class="card-panel">
+              <h3 class="panel-titulo">📈 Últimos 7 dias</h3>
+              <div id="grafico-container" class="grafico-container"></div>
+            </div>
+            <div class="card-panel">
+              <h3 class="panel-titulo">🕐 Últimas movimentações</h3>
+              <ul id="lista-ultimas" class="lista-simples"></ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── CAIXA ── -->
+        <section id="pagina-caixa" class="pagina">
+          <div class="pagina-header">
+            <h2>Fluxo de Caixa</h2>
+            <button class="btn btn--primario" id="btn-nova-mov">+ Nova Movimentação</button>
+          </div>
+
+          <!-- Filtros -->
+          <div class="filtros">
+            <div class="campo">
+              <label>De</label>
+              <input type="date" id="filtro-inicio" />
+            </div>
+            <div class="campo">
+              <label>Até</label>
+              <input type="date" id="filtro-fim" />
+            </div>
+            <div class="campo">
+              <label>Tipo</label>
+              <select id="filtro-tipo">
+                <option value="">Todos</option>
+                <option value="entrada">Entradas</option>
+                <option value="saida">Saídas</option>
+              </select>
+            </div>
+            <button class="btn btn--secundario" id="btn-filtrar-caixa">Filtrar</button>
+          </div>
+
+          <!-- Resumo caixa -->
+          <div class="cards-resumo" id="cards-caixa"></div>
+
+          <!-- Tabela -->
+          <div class="card-panel">
+            <div class="tabela-wrapper">
+              <table class="tabela" id="tabela-caixa">
+                <thead>
+                  <tr>
+                    <th>Data</th>
+                    <th>Descrição</th>
+                    <th>Categoria</th>
+                    <th>Pagamento</th>
+                    <th>Tipo</th>
+                    <th>Valor</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-caixa"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── PRODUTOS ── -->
+        <section id="pagina-produtos" class="pagina">
+          <div class="pagina-header">
+            <h2>Produtos</h2>
+            <button class="btn btn--primario admin-only" id="btn-novo-produto">+ Novo Produto</button>
+          </div>
+
+          <!-- Filtros -->
+          <div class="filtros">
+            <div class="campo campo--grow">
+              <input type="text" id="busca-produto" placeholder="Buscar por nome ou código de barras…" />
+            </div>
+            <div class="campo">
+              <select id="filtro-categoria"></select>
+            </div>
+            <label class="checkbox-label">
+              <input type="checkbox" id="filtro-estoque-baixo" />
+              Estoque baixo
+            </label>
+            <button class="btn btn--secundario" id="btn-buscar-produto">Buscar</button>
+          </div>
+
+          <div class="card-panel">
+            <div class="tabela-wrapper">
+              <table class="tabela" id="tabela-produtos">
+                <thead>
+                  <tr>
+                    <th>Produto</th>
+                    <th>Categoria</th>
+                    <th>Cód. Barras</th>
+                    <th>Custo</th>
+                    <th>Venda</th>
+                    <th>Estoque</th>
+                    <th>Status</th>
+                    <th class="admin-only">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-produtos"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── USUÁRIOS ── -->
+        <section id="pagina-usuarios" class="pagina">
+          <div class="pagina-header">
+            <h2>Usuários</h2>
+            <button class="btn btn--primario" id="btn-novo-usuario">+ Novo Usuário</button>
+          </div>
+
+          <div class="card-panel">
+            <div class="tabela-wrapper">
+              <table class="tabela">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Telefone</th>
+                    <th>Tipo</th>
+                    <th>Status</th>
+                    <th>Criado em</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-usuarios"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       MODAIS
+  ══════════════════════════════════════ -->
+
+  <!-- Modal genérico -->
+  <div id="modal" class="modal-overlay" style="display:none" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modal-titulo">Título</h3>
+        <button class="modal-fechar" id="btn-fechar-modal" aria-label="Fechar">✕</button>
+      </div>
+      <div class="modal-corpo" id="modal-corpo"></div>
+    </div>
+  </div>
+
+  <!-- Toast de notificação -->
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
