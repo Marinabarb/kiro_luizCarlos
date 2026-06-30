@@ -10,31 +10,82 @@
 <body class="tela-login-ativa">
 
   <!-- ══════════════════════════════════════
-       TELA DE LOGIN
+       TELA DE LOGIN / CADASTRO
   ══════════════════════════════════════ -->
   <div id="tela-login" class="tela-login">
     <div class="login-card">
       <div class="login-logo">🏪</div>
       <h1 class="login-titulo">Controle Comercial</h1>
-      <p class="login-sub">Faça login para continuar</p>
 
-      <form id="form-login" novalidate>
-        <div class="campo">
-          <label for="login-email">E-mail</label>
-          <input type="email" id="login-email" placeholder="admin@admin.com" required autocomplete="username" />
-        </div>
-        <div class="campo">
-          <label for="login-senha">Senha</label>
-          <input type="password" id="login-senha" placeholder="••••••••" required autocomplete="current-password" />
-        </div>
-        <div id="login-erro" class="alerta alerta--erro" style="display:none"></div>
-        <button type="submit" class="btn btn--primario btn--bloco" id="btn-login">Entrar</button>
-      </form>
+      <!-- Abas Login / Cadastro -->
+      <div class="login-abas">
+        <button class="login-aba ativa" id="aba-login" type="button">Entrar</button>
+        <button class="login-aba" id="aba-cadastro" type="button">Criar conta</button>
+      </div>
 
-      <p class="login-dica">
-        Acesse via <strong>http://localhost:3000</strong><br>
-        Credenciais padrão: <code>admin@admin.com</code> / <code>admin123</code>
-      </p>
+      <!-- ── PAINEL LOGIN ── -->
+      <div id="painel-login">
+        <form id="form-login" novalidate>
+          <div class="campo">
+            <label for="login-email">E-mail</label>
+            <input type="email" id="login-email" placeholder="seu@email.com" required autocomplete="username" />
+          </div>
+          <div class="campo">
+            <label for="login-senha">Senha</label>
+            <div class="campo-senha-wrap">
+              <input type="password" id="login-senha" placeholder="••••••••" required autocomplete="current-password" />
+              <button type="button" class="btn-olho" id="olho-login" aria-label="Ver senha">👁</button>
+            </div>
+          </div>
+          <div id="login-erro" class="alerta alerta--erro" style="display:none"></div>
+          <button type="submit" class="btn btn--primario btn--bloco" id="btn-login">Entrar</button>
+        </form>
+
+        <p class="login-dica">
+          Credenciais padrão: <code>admin@admin.com</code> / <code>admin123</code>
+        </p>
+      </div>
+
+      <!-- ── PAINEL CADASTRO ── -->
+      <div id="painel-cadastro" style="display:none">
+        <form id="form-cadastro" novalidate>
+          <div class="campo">
+            <label for="cad-nome">Nome completo *</label>
+            <input type="text" id="cad-nome" placeholder="Seu nome" maxlength="80" required />
+          </div>
+          <div class="campo">
+            <label for="cad-email">E-mail *</label>
+            <input type="email" id="cad-email" placeholder="seu@email.com" required />
+          </div>
+          <div class="campo">
+            <label for="cad-telefone">Telefone</label>
+            <input type="text" id="cad-telefone" placeholder="(00) 00000-0000" maxlength="20" />
+          </div>
+          <div class="campo">
+            <label for="cad-senha">Senha * <span class="campo-hint">(mín. 6 caracteres)</span></label>
+            <div class="campo-senha-wrap">
+              <input type="password" id="cad-senha" placeholder="••••••••" required autocomplete="new-password" />
+              <button type="button" class="btn-olho" id="olho-cad" aria-label="Ver senha">👁</button>
+            </div>
+          </div>
+          <div class="campo">
+            <label for="cad-confirma">Confirmar senha *</label>
+            <div class="campo-senha-wrap">
+              <input type="password" id="cad-confirma" placeholder="••••••••" required autocomplete="new-password" />
+              <button type="button" class="btn-olho" id="olho-conf" aria-label="Ver senha">👁</button>
+            </div>
+          </div>
+          <div id="cad-erro" class="alerta alerta--erro" style="display:none"></div>
+          <div id="cad-ok" class="alerta alerta--sucesso" style="display:none"></div>
+          <button type="submit" class="btn btn--primario btn--bloco" id="btn-cadastrar">Criar conta</button>
+        </form>
+
+        <p class="login-dica">
+          Sua conta será criada como <strong>Usuário Normal</strong>.<br>
+          O administrador pode alterar permissões depois.
+        </p>
+      </div>
+
     </div>
   </div>
 

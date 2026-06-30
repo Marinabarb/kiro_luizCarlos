@@ -49,4 +49,43 @@ function logout(req, res) {
   res.json({ mensagem: 'Logout registrado.' });
 }
 
-module.exports = { login, logout };
+// POST /api/auth/cadastro — cadastro público (cria USUARIO_NORMAL)
+function cadastrar(req, res) {
+  const { nome, email, senha, telefone } = req.body;
+
+  if (!nome || !email || !senha) {
+    return res.status(400).json({ erro: 'Nome, e-mail e senha são obrigatórios.' });
+  }
+  if (nome.trim().length < 2) {
+    return res.status(400).json({ erro: 'Nome deve ter ao menos 2 caracteres.' });
+  }
+  if (senha.length < 6) {
+    return res.status(400).json({ erro: 'Senha deve ter ao menos 6 caracteres.' });
+  }
+
+  const emailNorm = email.trim().toLowerCase();
+
+  // Validação básica de formato de e-mail
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNorm)) {
+    return res.status(400).json({ erro: 'E-mail inválido.' });
+  }
+
+  // Verifica duplicidade
+  const existe = db.prepare('SELECT id FROM usuarios WHERE email = ?').get(emailNorm);
+  if (existe) {
+    return res.status(409).json({ erro: 'Este e-mail já está cadastrado.' });
+  }
+
+  const hash = bcrypt.hashSync(senha, 12);
+
+  const result = db.prepare(`
+    INSERT INTO usuarios (nome, email, senha, telefone, tipo_usuario)
+    VALUES (?, ?, ?, ?, 'USUARIO_NORMAL')
+  `).run(nome.trim(), emailNorm, hash, telefone ? telefone.trim() : null);
+
+  registrarLog(result.lastInsertRowid, 'CADASTRO', `Novo usuário: ${emailNorm}`, req.ip);
+
+  res.status(201).json({ mensagem: 'Conta criada com sucesso! Faça login para entrar.' });
+}
+
+module.exports = { login, logout, cadastrar };

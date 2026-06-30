@@ -55,8 +55,61 @@ body { font-family: var(--fonte); background: var(--cinza-50); color: var(--cinz
 }
 
 .login-logo  { font-size: 3rem; margin-bottom: .5rem; }
-.login-titulo{ font-size: 1.4rem; font-weight: 700; color: var(--cinza-800); }
-.login-sub   { font-size: .85rem; color: var(--cinza-400); margin-bottom: 1.5rem; }
+.login-titulo{ font-size: 1.4rem; font-weight: 700; color: var(--cinza-800); margin-bottom: 1.25rem; }
+
+/* Abas Login / Cadastro */
+.login-abas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  background: var(--cinza-100);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 1.5rem;
+}
+.login-aba {
+  padding: .55rem;
+  border: none;
+  border-radius: 7px;
+  font-size: .875rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  color: var(--cinza-400);
+  transition: all var(--trans);
+}
+.login-aba.ativa {
+  background: var(--branco);
+  color: var(--azul);
+  box-shadow: 0 1px 4px rgba(0,0,0,.1);
+}
+
+/* Wrap de senha com botão olho */
+.campo-senha-wrap {
+  position: relative;
+  display: flex;
+}
+.campo-senha-wrap input {
+  padding-right: 2.5rem;
+}
+.btn-olho {
+  position: absolute;
+  right: .6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  opacity: .5;
+  transition: opacity var(--trans);
+  padding: 0;
+  line-height: 1;
+}
+.btn-olho:hover { opacity: 1; }
+
+/* Hint de campo */
+.campo-hint { font-size: .72rem; font-weight: 400; color: var(--cinza-400); }
 
 .login-dica {
   margin-top: 1.25rem;

@@ -207,6 +207,122 @@ if (Estado.token && Estado.usuario) {
 }
 
 // ════════════════════════════════════════════════════════════
+// TELA INICIAL — ABAS LOGIN / CADASTRO
+// ════════════════════════════════════════════════════════════
+
+// Alternar entre painéis
+document.getElementById('aba-login').addEventListener('click', function() {
+  document.getElementById('aba-login').classList.add('ativa');
+  document.getElementById('aba-cadastro').classList.remove('ativa');
+  document.getElementById('painel-login').style.display    = 'block';
+  document.getElementById('painel-cadastro').style.display = 'none';
+  document.getElementById('login-erro').style.display = 'none';
+});
+
+document.getElementById('aba-cadastro').addEventListener('click', function() {
+  document.getElementById('aba-cadastro').classList.add('ativa');
+  document.getElementById('aba-login').classList.remove('ativa');
+  document.getElementById('painel-cadastro').style.display = 'block';
+  document.getElementById('painel-login').style.display    = 'none';
+  document.getElementById('cad-erro').style.display = 'none';
+  document.getElementById('cad-ok').style.display   = 'none';
+  setTimeout(function() { document.getElementById('cad-nome').focus(); }, 60);
+});
+
+// Mostrar/ocultar senha — login
+document.getElementById('olho-login').addEventListener('click', function() {
+  var inp = document.getElementById('login-senha');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  this.style.opacity = inp.type === 'text' ? '1' : '0.5';
+});
+
+// Mostrar/ocultar senha — cadastro
+document.getElementById('olho-cad').addEventListener('click', function() {
+  var inp = document.getElementById('cad-senha');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  this.style.opacity = inp.type === 'text' ? '1' : '0.5';
+});
+document.getElementById('olho-conf').addEventListener('click', function() {
+  var inp = document.getElementById('cad-confirma');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  this.style.opacity = inp.type === 'text' ? '1' : '0.5';
+});
+
+// ── Formulário de cadastro ─────────────────────────────────
+document.getElementById('form-cadastro').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  var btn      = document.getElementById('btn-cadastrar');
+  var erroEl   = document.getElementById('cad-erro');
+  var okEl     = document.getElementById('cad-ok');
+  var nome     = document.getElementById('cad-nome').value.trim();
+  var email    = document.getElementById('cad-email').value.trim();
+  var telefone = document.getElementById('cad-telefone').value.trim();
+  var senha    = document.getElementById('cad-senha').value;
+  var confirma = document.getElementById('cad-confirma').value;
+
+  erroEl.style.display = 'none';
+  okEl.style.display   = 'none';
+
+  // Validações no cliente
+  if (!nome || nome.length < 2) {
+    erroEl.textContent   = 'Informe seu nome completo (mín. 2 caracteres).';
+    erroEl.style.display = 'block';
+    document.getElementById('cad-nome').focus();
+    return;
+  }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    erroEl.textContent   = 'Informe um e-mail válido.';
+    erroEl.style.display = 'block';
+    document.getElementById('cad-email').focus();
+    return;
+  }
+  if (!senha || senha.length < 6) {
+    erroEl.textContent   = 'A senha deve ter ao menos 6 caracteres.';
+    erroEl.style.display = 'block';
+    document.getElementById('cad-senha').focus();
+    return;
+  }
+  if (senha !== confirma) {
+    erroEl.textContent   = 'As senhas não coincidem.';
+    erroEl.style.display = 'block';
+    document.getElementById('cad-confirma').focus();
+    return;
+  }
+
+  btn.disabled    = true;
+  btn.textContent = 'Criando conta…';
+
+  try {
+    var dados = await api('POST', '/auth/cadastro', {
+      nome     : nome,
+      email    : email,
+      senha    : senha,
+      telefone : telefone || null,
+    });
+
+    // Sucesso — mostra mensagem e volta para aba de login
+    okEl.textContent   = dados.mensagem || 'Conta criada! Faça login.';
+    okEl.style.display = 'block';
+    document.getElementById('form-cadastro').reset();
+
+    // Preenche e-mail no login automaticamente e muda aba após 2s
+    setTimeout(function() {
+      document.getElementById('login-email').value = email;
+      document.getElementById('aba-login').click();
+      document.getElementById('login-senha').focus();
+    }, 2000);
+
+  } catch (err) {
+    erroEl.textContent   = err.message;
+    erroEl.style.display = 'block';
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = 'Criar conta';
+  }
+});
+
+// ════════════════════════════════════════════════════════════
 // NAVEGAÇÃO
 // ════════════════════════════════════════════════════════════
 
