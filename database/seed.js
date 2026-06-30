@@ -9,17 +9,22 @@ const { criarTabelas } = require('./schema');
 criarTabelas();
 
 // ── Admin padrão ──────────────────────────────────────────
+// Senha: admin123  |  Hash bcrypt custo 12
 const adminExiste = db
   .prepare("SELECT id FROM usuarios WHERE email = ?")
   .get('admin@admin.com');
 
 if (!adminExiste) {
-  const hash = bcrypt.hashSync('admin123', 10);
+  // Custo 12 = segurança adequada para produção
+  const hash = bcrypt.hashSync('admin123', 12);
   db.prepare(`
     INSERT INTO usuarios (nome, email, senha, tipo_usuario)
     VALUES (?, ?, ?, 'ADMIN')
   `).run('Administrador', 'admin@admin.com', hash);
-  console.log('✅ Admin criado: admin@admin.com / admin123');
+  console.log('✅ Admin criado');
+  console.log('   Email: admin@admin.com');
+  console.log('   Senha: admin123');
+  console.log('   ⚠️  Troque a senha após o primeiro acesso!');
 } else {
   console.log('ℹ️  Admin já existe, pulando.');
 }
